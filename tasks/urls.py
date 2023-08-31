@@ -40,7 +40,7 @@ urlpatterns = [
     path("shop/create/", ApiCreateTaskShopView.as_view(), name="create-shop"),
     path("shop/<slug:slug>/subscribe/", ApiCreateTaskShopSubscriber.as_view(), name="shop-sunscriber"),
     path("shop/<slug:slug>/create-task/", ApiShopCreateTaskView.as_view(), name="create-shop-task"),
-    path("shop/<slug:slug>/", ApiTaskShopDetailView.as_view(), name="shop-detail"),
+    path("shop/<str:slug>/", ApiTaskShopDetailView.as_view(), name="shop-detail"),
     #  URLS FOR TASK
     path("history/",  ApiTaskHistory.as_view(), name="tasks-history"),
     path("accept/", AcceptTaskView.as_view(), name="accept-task"),
@@ -52,7 +52,7 @@ urlpatterns = [
     path("<str:id>/bidders/", ApiTaskAssignmentView.as_view(), name="task-bidders"),
     path("<str:id>/contact-support/", ApiTaskSupport.as_view(), name="contact-support"),
     path("<str:id>/bidders/assign/<str:username>/", ApiPostTaskAssignmentView.as_view(), name="task-assign-bidder"),
-    path("<uuid:id>/", ApiEditTaskView.as_view(), name="task-detail"),
+    path("<str:id>/", ApiEditTaskView.as_view(), name="task-detail"),
     
     
 ]

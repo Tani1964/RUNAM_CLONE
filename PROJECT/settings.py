@@ -15,6 +15,7 @@ import datetime
 import os
 from datetime import timedelta
 from decouple import config
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -149,6 +150,9 @@ DATABASES = {
     'PORT': '7979'  
     } 
 }
+
+
+DATABASES['default'] = dj_database_url.parse("postgres://runam_user:AB0gYPUYh8i9jznFqRn4LX8dp8vgVPr6@dpg-cpo3k9lds78s73b9m64g-a.oregon-postgres.render.com/runam")
 
 
 # Password validation

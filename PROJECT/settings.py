@@ -152,7 +152,7 @@ DATABASES = {
 }
 
 
-DATABASES['default'] = dj_database_url.parse("postgres://runam_user:AB0gYPUYh8i9jznFqRn4LX8dp8vgVPr6@dpg-cpo3k9lds78s73b9m64g-a.oregon-postgres.render.com/runam")
+DATABASES['default'] = dj_database_url.parse(config('RENDER_DB_URL'))
 
 
 # Password validation

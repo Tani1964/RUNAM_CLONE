@@ -197,9 +197,16 @@ class TaskView(APIView):
 class ApiTaskView(ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated, HasPhoneNumberPermission]
+    # permission_classes = [IsAuthenticated, HasPhoneNumberPermission]
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ("name", "sender__username", "category__name", "description")
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]  # Specify your desired permission class for GET requests
+        elif self.request.method == 'POST':
+            return [IsAuthenticated(), HasPhoneNumberPermission()]  # Specify your desired permission class for POST requests
+        return []
     
 
     def get_context_data(self, request, **kwargs):

@@ -34,6 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['runam-382ac7fd49f9.herokuapp.com', 'localhost', '127.0.0.1']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -152,7 +153,7 @@ DATABASES = {
 }
 
 
-DATABASES['default'] = dj_database_url.parse(config('RENDER_DB_URL'))
+DATABASES['default'] = dj_database_url.parse(config('TODAY_RENDER_URL'))
 
 
 # Password validation

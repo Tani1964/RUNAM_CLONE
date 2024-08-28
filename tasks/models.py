@@ -39,7 +39,7 @@ class Task(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid.uuid4)
     name = models.CharField(max_length=200)
     description = models.TextField()
-    type = models.CharField(choices=TASK_CHOICES, default="Solo", max_length=100)
+    type = models.CharField(choices=TASK_CHOICES, max_length=100)
     tip = models.CharField(max_length=100, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     keywords = models.ManyToManyField(Keyword, blank=True)

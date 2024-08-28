@@ -30,29 +30,29 @@ def save_shop_profile(sender, instance, **kwargs):
 #         send_mail(subject, message, from_email, to_email, fail_silently=True)
 
 
-@receiver(post_save, sender=Task)
-def send_broaadcast_mail(sender, instance, created, **kwargs):
-    if created:
-        subject = "New Task Alert !!"
-        message = render_to_string('tasks/task_mail.html', {
-            'domain': 'localhost:8000/users/login'
-        })
-        from_email = settings.DEFAULT_FROM_EMAIL
-        to_email = ["edwardprosper001@gmail.com", "edwardprosper002@gmail.com"]
-        # send_mail(subject, message, from_email, to_email)
-        msg = EmailMessage(subject, message, from_email, to_email)
-        msg.content_subtype = 'html'
-        msg.send()
+# @receiver(post_save, sender=Task)
+# def send_broaadcast_mail(sender, instance, created, **kwargs):
+#     if created:
+#         subject = "New Task Alert !!"
+#         message = render_to_string('tasks/task_mail.html', {
+#             'domain': 'localhost:8000/users/login'
+#         })
+#         from_email = settings.DEFAULT_FROM_EMAIL
+#         to_email = ["edwardprosper001@gmail.com", "edwardprosper002@gmail.com"]
+#         # send_mail(subject, message, from_email, to_email)
+#         msg = EmailMessage(subject, message, from_email, to_email)
+#         msg.content_subtype = 'html'
+#         msg.send()
 
 
     
-def send_email_on_accepted_change(sender, instance, **kwargs):
-    if instance.completed:
-        subject = 'Thank you for using RUNAM'
-        message = 'Your task has been completed'
-        from_email = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [instance.messenger.email]
-        send_mail(subject, message, from_email, recipient_list)
+# def send_email_on_accepted_change(sender, instance, **kwargs):
+#     if instance.completed:
+#         subject = 'Thank you for using RUNAM'
+#         message = 'Your task has been completed'
+#         from_email = settings.DEFAULT_FROM_EMAIL
+#         recipient_list = [instance.messenger.email]
+#         send_mail(subject, message, from_email, recipient_list)
 
 
 

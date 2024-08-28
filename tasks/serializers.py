@@ -119,6 +119,13 @@ class TaskSerializer(serializers.ModelSerializer):
     images = TaskImageSerializer(many=True, read_only=True)
     # uploaded_images = serializers.ListField(
     #     child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False), write_only=True)
+    # uploaded_images = serializers.ListField(
+    #     child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
+    #     write_only=True,
+    #     required=False,  # Make the field optional
+    #     allow_null=True, # Allow the field to be null
+    #     default=[]      # Provide a default empty list if the field is not provided
+    # )
     task_url = serializers.HyperlinkedIdentityField(
         view_name="task-detail",
         lookup_field = "id"
@@ -126,18 +133,18 @@ class TaskSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Task
-        fields = ["id", "task_url", "name", "description", "category", "image", "bidding_amount", "sender_name", "keywords", "is_active", "picked_up",  "completed", "paid", "images", "uploaded_images"]
+        fields = ["id", "task_url", "name", "description", "type", "tip", "pick_up", "deliver_to", "category", "image", "bidding_amount", "sender_name", "keywords", "is_active", "picked_up",  "completed", "paid", "images"]
+ 
 
-
-    def create(self, validated_data):
-        if uploaded_images:
-            uploaded_images = validated_data.pop("uploaded_images")
-            task = Task.objects.create(**validated_data)
-            for image in uploaded_images:
-                TaskImages.objects.create(task=task, image=image)
-        else:
-            task = Task.objects.create(**validated_data)
-        return task
+    # def create(self, validated_data):
+    #     if uploaded_images:
+    #         uploaded_images = validated_data.pop("uploaded_images")
+    #         task = Task.objects.create(**validated_data)
+    #         for image in uploaded_images:
+    #             TaskImages.objects.create(task=task, image=image)
+    #     else:
+    #         task = Task.objects.create(**validated_data)
+    #     return task
 
 
     def get_name_of_sender(self, task_sender):

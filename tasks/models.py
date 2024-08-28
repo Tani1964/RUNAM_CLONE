@@ -22,12 +22,25 @@ class Category(models.Model):
         return self.name
     
 
+TASK_CHOICES = (
+    ("Solo", "Solo"),
+    ("Group", "Group")
+)
+
+TIP_CHOICES = (
+    ("0", "0"),
+    ("100", "100"),
+    ("200", "200"),
+    ("500", "500"),
+)
 
 
 class Task(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid.uuid4)
     name = models.CharField(max_length=200)
     description = models.TextField()
+    type = models.CharField(choices=TASK_CHOICES, default="Solo", max_length=100)
+    tip = models.CharField(max_length=100, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     keywords = models.ManyToManyField(Keyword, blank=True)
     bidding_amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -37,6 +50,8 @@ class Task(models.Model):
     task_bidders = models.ManyToManyField("Bidder", related_name="single_task_bidders", blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
+    pick_up = models.CharField(max_length=255)
+    deliver_to = models.CharField(max_length=255)
     picked_up = models.BooleanField(default=False)
     being_delivered =models.BooleanField(default=False)
     completed = models.BooleanField(default=False)

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
     TaskView,
+    DirectTaskView,
     ApiTaskView,
     AcceptTaskView,
     ApiCompletedTasksView,
@@ -29,6 +30,7 @@ from .views import (
 
 urlpatterns = [
     path("", ApiTaskView.as_view(), name="task"),
+    path("direct/", DirectTaskView.as_view(), name="api_task"),
     path("<str:id>/new-bidder/", ApiNewBidderView.as_view(), name="new_bidder"),
     path("my-requests/", ApiTaskRequestView.as_view(), name="requested-tasks"),
     path("my-activity/", ApiMyActivityView.as_view(), name="my-activity"),

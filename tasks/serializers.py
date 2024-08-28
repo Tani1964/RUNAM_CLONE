@@ -105,6 +105,53 @@ class TaskImageSerializer(serializers.ModelSerializer):
         fields = ["task", "image"]
 
 
+class DirectTaskSerializer(serializers.ModelSerializer):
+    sender_name = serializers.SerializerMethodField("get_name_of_sender")
+    keywords = serializers.SerializerMethodField("get_actual_keyword")
+    is_active = serializers.ReadOnlyField()
+    completed = serializers.ReadOnlyField()
+    paid = serializers.ReadOnlyField()
+    category = serializers.StringRelatedField()
+    images = TaskImageSerializer(many=True, read_only=True)
+    task_url = serializers.HyperlinkedIdentityField(
+        view_name="task-detail",
+        lookup_field = "id"
+    )
+    messenger = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    
+
+    class Meta:
+        model = Task
+        fields = ["id", "task_url", "name", "description", "type", "tip", "pick_up", "deliver_to", "category", "image", "bidding_amount", "sender_name", "keywords", "is_active", "picked_up",  "completed", "paid", "messenger", "images"]
+
+    
+    def create(self, validated_data):
+        # Retrieve the request context if available
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['sender'] = request.user
+        
+        return super().create(validated_data)
+ 
+
+    def get_name_of_sender(self, task_sender):
+        username = task_sender.sender.username
+        return username
+    
+    def get_actual_keyword(self, obj):
+        return KeywordsSerializer(obj.keywords.all(), many=True).data
+    
+    def get_task_bidders(self, obj):
+        return GetBidderSerializer(obj.task_bidders.all(), many=True).data
+
+    
+    def get_name_of_receiver(self, task_receiver):
+        username = task_receiver.receiver.username
+        return  username
+
+
+
+
 class TaskSerializer(serializers.ModelSerializer):
     sender_name = serializers.SerializerMethodField("get_name_of_sender")
     # url = serializers.HyperlinkedIdentityField(view_name='task-detail', lookup_field='id')

@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import (
     TaskSerializer, 
+    DirectTaskSerializer,
     AcceptTaskSerializer, 
     TaskReviewSerializer, 
     GetBidderSerializer, 
@@ -166,9 +167,6 @@ class ApiShopCreateTaskView(APIView):
 class TaskView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    # def get_queryset(self):
-    #     """Returns Polls that were created today"""
-    #     return Task.objects.exclude(sender=self.request.user.pk)
     
     def get(self, request, format=None):
         # queryset = Task.objects.filter(is_active=False)
@@ -180,6 +178,34 @@ class TaskView(APIView):
         data = request.data
         data['sender'] = request.user.pk
         serializer =TaskSerializer(data=data)
+        data = {}
+        serializer.is_valid(raise_exception=True)
+        task = serializer.save()
+        data["Success"] = "Task has been created"
+        data["id"] = task.id
+        data["name"] = task.name
+        data["description"] = task.description
+        # data["sender"] = task.sender
+        data["completed"] = task.completed
+
+        return Response(data=data, status=status.HTTP_201_CREATED)
+    
+
+class DirectTaskView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    
+    def get(self, request, format=None):
+        # queryset = Task.objects.filter(is_active=False)
+        queryset = Task.objects.exclude(sender=self.request.user) | Task.objects.exclude(picked_up=True)
+        serializer = TaskSerializer(queryset, many=True)
+        return Response(serializer.data, request.user,  status=status.HTTP_200_OK)
+    
+    def post(self, request, format=None):
+        data = request.data.copy()
+        # data = request.data
+        data['sender'] = request.user.pk
+        serializer = DirectTaskSerializer(data=data, context={'request': request})
         data = {}
         serializer.is_valid(raise_exception=True)
         task = serializer.save()

@@ -52,6 +52,7 @@ class Task(models.Model):
     date_updated = models.DateTimeField(auto_now_add=True)
     pick_up = models.CharField(max_length=255)
     deliver_to = models.CharField(max_length=255)
+    accepted = models.BooleanField(default=False)
     picked_up = models.BooleanField(default=False)
     being_delivered =models.BooleanField(default=False)
     completed = models.BooleanField(default=False)

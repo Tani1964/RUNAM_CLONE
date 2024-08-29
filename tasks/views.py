@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import serializers
 from .models import Task, AcceptTask, TaskReview, Bidder, NewBidder, Support, Shop
 from rest_framework import status
@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import (
     TaskSerializer, 
+    AddImageToTaskSerializer,
     DirectTaskSerializer,
     AcceptTaskSerializer, 
     TaskReviewSerializer, 
@@ -189,6 +190,19 @@ class TaskView(APIView):
         data["completed"] = task.completed
 
         return Response(data=data, status=status.HTTP_201_CREATED)
+    
+
+class AddImageToTaskView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None, **kwargs):
+        task_id = kwargs.get('task_id')
+        current_task = get_object_or_404(Task, id=task_id)
+        task_image_serialzier = AddImageToTaskSerializer(current_task, data=request.data)
+        task_image_serialzier.is_valid(raise_exception=True)
+        task_image_serialzier.save()
+        return Response({"Message": "Image Successfully Added"}, status=status.HTTP_201_CREATED)
+
     
 
 class DirectTaskView(APIView):

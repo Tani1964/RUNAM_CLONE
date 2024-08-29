@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     TaskView,
     DirectTaskView,
+    AddImageToTaskView,
     ApiTaskView,
     AcceptTaskView,
     ApiCompletedTasksView,
@@ -55,6 +56,7 @@ urlpatterns = [
     path("<str:id>/contact-support/", ApiTaskSupport.as_view(), name="contact-support"),
     path("<str:id>/bidders/assign/<str:username>/", ApiPostTaskAssignmentView.as_view(), name="task-assign-bidder"),
     path("<str:id>/", ApiEditTaskView.as_view(), name="task-detail"),
+    path("<uuid:task_id>/add-image/", AddImageToTaskView.as_view(), name="add-image-to-task")
     
     
 ]

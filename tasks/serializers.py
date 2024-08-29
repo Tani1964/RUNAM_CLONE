@@ -150,6 +150,22 @@ class DirectTaskSerializer(serializers.ModelSerializer):
         return  username
 
 
+def validate_image_size(image):
+    """Validate that the image size is less than or equal to 1 MB."""
+    max_size_mb = 1
+    max_size_bytes = max_size_mb * 1024 * 1024  # Convert MB to bytes
+    if image.size > max_size_bytes:
+        raise serializers.ValidationError(f"Image size should not exceed {max_size_mb} MB.")
+
+
+class AddImageToTaskSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=True, validators=[validate_image_size])
+    
+    class Meta:
+        model = Task
+        fields = ["image"]
+
+
 
 
 class TaskSerializer(serializers.ModelSerializer):

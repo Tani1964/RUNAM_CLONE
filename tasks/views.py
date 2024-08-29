@@ -25,7 +25,7 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpda
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from users.models import User
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .permissions import HasPhoneNumberPermission
+from .permissions import HasPhoneNumberPermission, IsTaskMessenger
 
 
 class APITaskShopView(APIView):
@@ -324,7 +324,18 @@ class ApiTaskAcceptAPIView(APIView):
         
 
 
- 
+class MarkTaskAsPickedUp(APIView):
+    permission_classes = [IsAuthenticated, IsTaskMessenger]
+
+    def put(self, request, format=None, **kwargs):
+        current_user = request.user
+        task_id = kwargs.get("task_id")
+        current_task = get_object_or_404(Task, id=task_id)
+        current_task.picked_up = True
+        current_task.save()
+        return Response({"Success": "Task has been picked up"}, status=status.HTTP_200_OK)
+    
+
  
 
 

@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 # class HasPhoneNumberPermission(BasePermission):
@@ -25,6 +26,27 @@ class HasPhoneNumberPermission(BasePermission):
         return bool(request.user.profile.phone_number)
     
         
+
+
+class IsTaskMessenger(BasePermission):
+    """
+    Custom permission to allow only the messenger of a task to perform changes.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if the user is the messenger of the task.
+        """
+        # Check if the request method is safe (GET, HEAD, OPTIONS)
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # For non-safe methods (PUT, PATCH, DELETE), check if the user is the messenger
+        if obj.messenger == request.user:
+            return True
+        
+        # Raise a PermissionDenied exception with a custom message
+        raise PermissionDenied(detail="You do not have permission to modify this task.")
 
 
 

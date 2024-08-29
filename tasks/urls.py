@@ -26,7 +26,8 @@ from .views import (
     ApiCreateTaskShopView,
     ApiTaskShopDetailView,
     ApiCreateTaskShopSubscriber,
-    ApiShopCreateTaskView
+    ApiShopCreateTaskView,
+    MarkTaskAsPickedUp
 
 )
 
@@ -58,6 +59,7 @@ urlpatterns = [
     path("<str:id>/bidders/assign/<str:username>/", ApiPostTaskAssignmentView.as_view(), name="task-assign-bidder"),
     path("<uuid:task_id>/add-image/", AddImageToTaskView.as_view(), name="add-image-to-task"),
     path("<uuid:task_id>/accept/", ApiTaskAcceptAPIView.as_view(), name="accept-task"),
+    path("<uuid:task_id>/picked-up/", MarkTaskAsPickedUp.as_view(), name="task-picked-up"),
     path("<str:id>/", ApiEditTaskView.as_view(), name="task-detail"),
     
     

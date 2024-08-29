@@ -303,6 +303,27 @@ class ApiEditTaskView(APIView):
         except Task.DoesNotExist:
             return Response({"Error": "Cannot find a matching task"})
         
+
+class ApiTaskAcceptAPIView(APIView):
+    def put(self, request, format=None, **kwargs):
+        current_user = request.user
+        user = get_object_or_404(User, email=current_user)
+        task_id = kwargs.get("task_id")
+        current_task = get_object_or_404(Task, id=task_id)
+        if current_task.picked_up == False:
+            if current_task.sender == current_user:
+                return Response({"Error": "You can't accept your own task"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                current_task.messenger = user
+                current_task.picked_up = True
+                current_task.save()
+                return Response({"Success": "Task Accepted"}, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response({"Error": "Task has been picked up"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+        
  
 
 

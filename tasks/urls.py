@@ -27,7 +27,8 @@ from .views import (
     ApiTaskShopDetailView,
     ApiCreateTaskShopSubscriber,
     ApiShopCreateTaskView,
-    MarkTaskAsPickedUp
+    MarkTaskAsPickedUp,
+    MarkTaskAsComplete
 
 )
 
@@ -60,6 +61,7 @@ urlpatterns = [
     path("<uuid:task_id>/add-image/", AddImageToTaskView.as_view(), name="add-image-to-task"),
     path("<uuid:task_id>/accept/", ApiTaskAcceptAPIView.as_view(), name="accept-task"),
     path("<uuid:task_id>/picked-up/", MarkTaskAsPickedUp.as_view(), name="task-picked-up"),
+    path("<uuid:task_id>/complete/", MarkTaskAsComplete.as_view(), name="complete-task"),
     path("<str:id>/", ApiEditTaskView.as_view(), name="task-detail"),
     
     

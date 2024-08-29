@@ -336,7 +336,16 @@ class MarkTaskAsPickedUp(APIView):
         return Response({"Success": "Task has been picked up"}, status=status.HTTP_200_OK)
     
 
- 
+class MarkTaskAsComplete(APIView):
+    permission_classes = [IsAuthenticated, IsTaskMessenger]
+
+    def put(self, request, format=None, **kwargs):
+        current_user = request.user
+        task_id = kwargs.get("task_id")
+        current_task = get_object_or_404(Task, id=task_id)
+        current_task.completed = True
+        current_task.save()
+        return Response({"Success": "Task completed successfully"}, status=status.HTTP_200_OK)
 
 
 class ApiAvailableTasksView(APIView): #You changed this from ListAPIView to APIView

@@ -10,6 +10,10 @@ class KeywordsSerializer(serializers.ModelSerializer):
 
 
 
+class TaskHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ["id", "type", "name", "date_posted"]
 
 
 

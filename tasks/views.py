@@ -18,6 +18,7 @@ from .serializers import (
     ChangePasswordSerializer, 
     PostNewBidderSerializer, 
     GetNewBidderSerializer, 
+    TaskHistorySerializer,
     TaskSupportSerializer, 
     ShopSerializer,
     CreateShopTaskSerializer)
@@ -403,8 +404,9 @@ class ApiTaskHistory(APIView):
     permission_classes = [IsAuthenticated,]
     
     def get(self, request, format=None):
-        tasks = Task.objects.filter(sender=request.user)
-        serializer = TaskSerializer(tasks, many=True)
+        current_user = User.objects.get(email=request.user)
+        tasks = Task.objects.filter(sender=current_user)
+        serializer = TaskHistorySerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     

@@ -11,9 +11,15 @@ class KeywordsSerializer(serializers.ModelSerializer):
 
 
 class TaskHistorySerializer(serializers.ModelSerializer):
+    date_posted = serializers.SerializerMethodField("format_date_posted")
     class Meta:
         model = Task
         fields = ["id", "type", "name", "date_posted"]
+
+    def format_date_posted(self, obj):
+        return obj.date_posted.strftime('%d-%m-%Y')
+
+    
 
 
 

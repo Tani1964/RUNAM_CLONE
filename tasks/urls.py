@@ -28,6 +28,7 @@ from .views import (
     ApiCreateTaskShopSubscriber,
     ApiShopCreateTaskView,
     MarkTaskAsPickedUp,
+    MyApiTaskHistory,
     MarkTaskAsComplete
 
 )
@@ -49,6 +50,7 @@ urlpatterns = [
     path("shop/<str:slug>/", ApiTaskShopDetailView.as_view(), name="shop-detail"),
     #  URLS FOR TASK
     path("history/",  ApiTaskHistory.as_view(), name="tasks-history"),
+    path("my-history/", MyApiTaskHistory.as_view(), name="my-tasks-history"),
     path("accept/", AcceptTaskView.as_view(), name="accept-task"),
     path("available/", ApiAvailableTasksView.as_view(), name="available-tasks"),
     path("running/", ApiUndergoingTaskView.as_view(), name="running-tasks"),

@@ -415,7 +415,7 @@ class MyApiTaskHistory(APIView):
 
     def get(self, request, format=None):
         current_user = User.objects.get(email=request.user)
-        tasks = Task.objects.filter(sender=current_user)
+        tasks = Task.objects.filter(messenger=current_user)
         serializer = TaskHistorySerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

@@ -14,14 +14,14 @@ class MyUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "email"]
+        fields = ["username", "email", "bio", "avatar"]
 
     
     def get_user_bio(self, obj):
         return obj.profile.bio if obj.profile else None
     
     def get_user_avatar(self, obj):
-        return obj.profile.avatar.image.url
+          return obj.profile.avatar.url if obj.profile and obj.profile.avatar else None
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

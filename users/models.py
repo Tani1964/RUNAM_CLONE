@@ -74,7 +74,7 @@ class User(AbstractBaseUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    avatar = models.ImageField(default="default2.jpg",upload_to="user_profile_pics", blank=True)
+    avatar = models.ImageField(default="default2.jpg",upload_to="user_profile_pics")
     bio = models.CharField(max_length=200, blank=True)
     location = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=11)

@@ -778,9 +778,9 @@ class ApiMyCreatedTasks(APIView):
         user = request.user
         picked_up = request.query_params.get('picked_up', None)
         if picked_up is not None:
-            my_tasks = Task.objects.filter(messenger=user, picked_up=True)
+            my_tasks = Task.objects.filter(sender=user, messenger__isnull=False)
         else:
-            my_tasks = Task.objects.filter(sender=request.user, picked_up=False)
+            my_tasks = Task.objects.filter(sender=user, messenger__isnull=True)
         serializer = TaskDetailSerializer(my_tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

@@ -244,10 +244,14 @@ class ApiTaskView(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == 'GET':
-            return [AllowAny()]  # Specify your desired permission class for GET requests
+            return [IsAuthenticated()]  # Specify your desired permission class for GET requests
         elif self.request.method == 'POST':
             return [IsAuthenticated(), HasPhoneNumberPermission()]  # Specify your desired permission class for POST requests
         return []
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.exclude(sender=user)
     
 
     def get_context_data(self, request, **kwargs):
@@ -406,10 +410,11 @@ class ApiTaskHistory(APIView): # AS SENDER
     
     def get(self, request, format=None):
         user = request.user
-        accepted = request.query_params.get('accepted', None)
+        completed = request.query_params.get('completed', None)
         current_user = User.objects.get(email=user)
 
-        if accepted is not None:
+        # IF THEY ADD THIS, IT RETURNS ONLY TASKS THAT HAVE BEEN COMPLETED IN THE USER'S HISTORY
+        if completed is not None:
             tasks = Task.objects.filter(messenger=user, is_active=True, completed=True)
         else:
             tasks = Task.objects.filter(sender=current_user)
@@ -418,11 +423,14 @@ class ApiTaskHistory(APIView): # AS SENDER
     
 
 class MyApiTaskHistory(APIView):
+    '''
+    Returns all tasks where the user is the errandee
+    '''
     permission_classes = [IsAuthenticated,]
 
     def get(self, request, format=None):
         current_user = User.objects.get(email=request.user)
-        tasks = Task.objects.filter(messenger=current_user)
+        tasks = Task.objects.filter(messenger=current_user, completed=True)
         if tasks.count() == 0:
             return Response({"You haven't completed any errands yet"}, status=status.HTTP_200_OK)
         else:
@@ -743,6 +751,29 @@ class ApiTaskSupport(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
+
+
+class ApiMyAcceptedTasks(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = request.user
+        completed = request.query_params.get('completed', None)
+        if completed is not None:
+            all_tasks = Task.objects.filter(messenger=user,completed=True)
+        else:   
+            all_tasks = Task.objects.filter(messenger=user, completed=False)
+        serializer = TaskDetailSerializer(all_tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+     
+        current_user = User.objects.get(email=user)
+
+        # IF THEY ADD THIS, IT RETURNS ONLY TASKS THAT HAVE BEEN COMPLETED IN THE USER'S HISTORY
+        
+     
 
 
 

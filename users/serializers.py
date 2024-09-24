@@ -3,7 +3,25 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from rest_framework.generics import GenericAPIView
 from .models import Profile, Referral
+
 User = get_user_model()
+
+
+class MyUserSerializer(serializers.ModelSerializer):
+    bio = serializers.SerializerMethodField("get_user_bio")
+    avatar = serializers.SerializerMethodField("get_user_avatar")
+
+
+    class Meta:
+        model = User
+        fields = ["username", "email"]
+
+    
+    def get_user_bio(self, obj):
+        return obj.profile.bio if obj.profile else None
+    
+    def get_user_avatar(self, obj):
+        return obj.profile.avatar.image.url
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

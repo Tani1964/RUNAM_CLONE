@@ -402,12 +402,19 @@ class AcceptTaskView(APIView):
 
 class ApiTaskHistory(APIView): # AS SENDER
     permission_classes = [IsAuthenticated,]
+
     
     def get(self, request, format=None):
-        current_user = User.objects.get(email=request.user)
-        tasks = Task.objects.filter(sender=current_user)
-        serializer = TaskHistorySerializer(tasks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        user = request.user
+        accepted = request.query_params.get('accepted', None)
+        current_user = User.objects.get(email=user)
+
+        if accepted is not None:
+            tasks = Task.objects.filter(messenger=user, is_active=True)
+        else:
+            tasks = Task.objects.filter(sender=current_user)
+            serializer = TaskHistorySerializer(tasks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 class MyApiTaskHistory(APIView):
@@ -416,8 +423,11 @@ class MyApiTaskHistory(APIView):
     def get(self, request, format=None):
         current_user = User.objects.get(email=request.user)
         tasks = Task.objects.filter(messenger=current_user)
-        serializer = TaskHistorySerializer(tasks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if tasks.count() == 0:
+            return Response({"You haven't completed any errands yet"}, status=status.HTTP_200_OK)
+        else:
+            serializer = TaskHistorySerializer(tasks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
     
@@ -733,6 +743,7 @@ class ApiTaskSupport(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
 
 
 

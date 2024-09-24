@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import UserRegistrationSerializer, CustomUserSerializer, ChangePasswordSerializer
+from .serializers import UserRegistrationSerializer, MyUserSerializer, CustomUserSerializer, ChangePasswordSerializer
 from .models import User, Profile
 from rest_framework.response import Response
 from rest_framework import status
@@ -181,3 +181,10 @@ class ChangePasswordView(APIView):
         return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
 
 
+class ListAllUsersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        all_users = User.objects.all()
+        serializer = MyUserSerializer(all_users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

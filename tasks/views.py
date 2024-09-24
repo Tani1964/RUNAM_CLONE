@@ -380,9 +380,9 @@ class AcceptTaskView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         get_task = serializer.data.get("task")
-        print("prosper", get_task)
+        # print("prosper", get_task)
         sender_pk = Task.objects.get(id=get_task).sender
-        print("edward", sender_pk)
+        # print("edward", sender_pk)
         # print("edward", task_sender_pk)
         # get_sender_pk = User.objects.get(get_task.sender)
         # user = serializer.data.get("receiver")
@@ -768,10 +768,22 @@ class ApiMyAcceptedTasks(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-     
-        current_user = User.objects.get(email=user)
+class ApiMyCreatedTasks(APIView):
+    permission_classes = [IsAuthenticated]
 
-        # IF THEY ADD THIS, IT RETURNS ONLY TASKS THAT HAVE BEEN COMPLETED IN THE USER'S HISTORY
+    def get(self, request, format=None):
+        '''
+        Returns all tasks that a user has created that's has been accepted  is yet to be accepted
+        '''
+        user = request.user
+        picked_up = request.query_params.get('picked_up', None)
+        if picked_up is not None:
+            my_tasks = Task.objects.filter(messenger=user, picked_up=True)
+        else:
+            my_tasks = Task.objects.filter(sender=request.user, picked_up=False)
+        serializer = TaskDetailSerializer(my_tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
         
      
 

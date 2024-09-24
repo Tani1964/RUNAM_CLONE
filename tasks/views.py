@@ -410,7 +410,7 @@ class ApiTaskHistory(APIView): # AS SENDER
         current_user = User.objects.get(email=user)
 
         if accepted is not None:
-            tasks = Task.objects.filter(messenger=user, is_active=True)
+            tasks = Task.objects.filter(messenger=user, is_active=True, completed=True)
         else:
             tasks = Task.objects.filter(sender=current_user)
             serializer = TaskHistorySerializer(tasks, many=True)

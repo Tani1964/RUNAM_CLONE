@@ -776,8 +776,8 @@ class ApiMyCreatedTasks(APIView):
         Returns all tasks that a user has created that's has been accepted  is yet to be accepted
         '''
         user = request.user
-        picked_up = request.query_params.get('picked_up', None)
-        if picked_up is not None:
+        not_picked_up = request.query_params.get('picked_up', None)
+        if not_picked_up is not None:
             my_tasks = Task.objects.filter(sender=user, messenger__isnull=False)
         else:
             my_tasks = Task.objects.filter(sender=user, messenger__isnull=True)

@@ -101,7 +101,7 @@ SPECTACULAR_SETTINGS = {
 CORS_ALLOWED_ORIGINS = [
 # "https://domain.com",
 # "https://api.domain.com",
-"http://localhost:5173",
+"https://localhost:5173",
 # "http://127.0.0.1:9000"
 ]
 

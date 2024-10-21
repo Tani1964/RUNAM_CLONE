@@ -524,7 +524,8 @@ class ApiTaskBidView(APIView):
         return Response(
             {"Success": "Bid for task submitted",
             "user": user.username,
-            "message": new_bidder_data.message
+            "message": new_bidder_data.message,
+            "price": new_bidder_data.price
                         } ,status=status.HTTP_201_CREATED)
 
         

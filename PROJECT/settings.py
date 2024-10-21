@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'tasks.apps.TasksConfig',
     "drf_spectacular", # new
     "social_django",
+    'corsheaders',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -96,10 +97,19 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
+
+CORS_ALLOWED_ORIGINS = [
+# "https://domain.com",
+# "https://api.domain.com",
+"http://localhost:5173",
+# "http://127.0.0.1:9000"
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

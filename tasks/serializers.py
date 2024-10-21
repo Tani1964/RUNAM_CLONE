@@ -43,7 +43,7 @@ class GetBidderSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_bidder_username")
     class Meta:
         model = Bidder
-        fields = ["user", "message"]
+        fields = ["user", "message", "price"]
 
     def get_bidder_username(self, obj):
         return obj.user.username
@@ -53,7 +53,7 @@ class GetBidderSerializer(serializers.ModelSerializer):
 class PostBidderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bidder
-        fields = ["message"]
+        fields = ["message", "price"]
 
         
     

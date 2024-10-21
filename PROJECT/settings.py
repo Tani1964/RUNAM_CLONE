@@ -102,7 +102,7 @@ CORS_ALLOWED_ORIGINS = [
 # "https://domain.com",
 # "https://api.domain.com",
 "https://localhost:5173",
-"https://runittech.co/"
+"https://runittech.co"
 # "http://127.0.0.1:9000"
 ]
 

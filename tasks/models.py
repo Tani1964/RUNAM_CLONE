@@ -76,6 +76,7 @@ class TaskImages(models.Model):
 class Bidder(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    price = models.BigIntegerField()
     message = models.CharField(max_length=150)
 
     def __str__(self):

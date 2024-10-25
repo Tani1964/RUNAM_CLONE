@@ -26,7 +26,7 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpda
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from users.models import User
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .permissions import HasPhoneNumberPermission, IsTaskMessenger
+from .permissions import HasPhoneNumberPermission, IsTaskMessenger, IsTaskSender
 
 
 class APITaskShopView(APIView):
@@ -708,6 +708,7 @@ class ApiTaskAssignmentView(APIView):
 
 
 class ApiPostTaskAssignmentView(APIView):
+    permission_classes = [IsAuthenticated, IsTaskSender]
     ''' Assigns the task to one of the task bidders
     Once a task is assigned to a user, the task field
     picked_up should change to True. The task also should stop 

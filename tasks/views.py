@@ -763,11 +763,21 @@ class ApiMyAcceptedTasks(APIView):
         user = request.user
         completed = request.query_params.get('completed', None)
         if completed is not None:
-            all_tasks = Task.objects.filter(messenger=user,completed=True)
+            all_tasks = Task.objects.filter(messenger=user,completed=True).order_by("-date_posted")
         else:   
-            all_tasks = Task.objects.filter(messenger=user, completed=False)
+            all_tasks = Task.objects.filter(messenger=user, completed=False).order_by("-date_posted")
         serializer = TaskDetailSerializer(all_tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+# class ApiMyCreatedTasks(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, format=None):
+#         user = request.user
+#         all_user_tasks = Task.objects.filter(sender=user)
+#         serializer = TaskDetailSerializer(all_user_tasks, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 class ApiMyCreatedTasks(APIView):
@@ -780,9 +790,9 @@ class ApiMyCreatedTasks(APIView):
         user = request.user
         not_picked_up = request.query_params.get('picked_up', None)
         if not_picked_up is not None:
-            my_tasks = Task.objects.filter(sender=user, messenger__isnull=False)
+            my_tasks = Task.objects.filter(sender=user, messenger__isnull=False).order_by("-date_posted")
         else:
-            my_tasks = Task.objects.filter(sender=user, messenger__isnull=True)
+            my_tasks = Task.objects.filter(sender=user).order_by("-date_posted")
         serializer = TaskDetailSerializer(my_tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "drf_spectacular", # new
     "social_django",
     'corsheaders',
+    'storages',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

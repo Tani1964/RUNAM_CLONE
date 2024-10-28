@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Task, AcceptTask, TaskReview, Keyword, Bidder, NewBidder, Support, Shop, TaskImages
 from users.models import User
 from django.utils import timezone
+from users.serializers import CustomUserSerializer, MyUserSerializer, ProfileSerializer
 
 class KeywordsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,12 +42,16 @@ class GetNewBidderSerializer(serializers.ModelSerializer):
 
 class GetBidderSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_bidder_username")
+    phone_number = serializers.SerializerMethodField("get_bidder_phone_number")
     class Meta:
         model = Bidder
-        fields = ["user", "message", "price"]
+        fields = ["user", "message", "price", "phone_number"]
 
     def get_bidder_username(self, obj):
         return obj.user.username
+    
+    def get_bidder_phone_number(self, obj):
+        return obj.user.profile.phone_number
     
 
 
@@ -54,6 +59,31 @@ class PostBidderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bidder
         fields = ["message", "price"]
+
+
+class BidderDetailSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField("get_bidder_username")
+    phone_number = serializers.SerializerMethodField("get_bidder_phone_number")
+    user_details = CustomUserSerializer(many=False)
+    profile_details = ProfileSerializer(many=False)
+
+
+    class Meta:
+        model = Bidder
+        fields = ["price", "message", "user_details", "profile_details"]
+
+
+    def get_bidder_username(self, obj):
+        return obj.user.username
+    
+    def get_bidder_phone_number(self, obj):
+        return obj.user.profile.phone_number
+    
+    
+    
+
+    
+
 
         
     

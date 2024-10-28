@@ -18,6 +18,7 @@ from .serializers import (
     ChangePasswordSerializer, 
     PostNewBidderSerializer, 
     GetNewBidderSerializer, 
+    BidderDetailSerializer,
     TaskHistorySerializer,
     TaskSupportSerializer, 
     ShopSerializer,
@@ -578,6 +579,18 @@ class ApiTaskRequestView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
+
+class BidderDetailView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        task_id = request.kwargs.get("task_id")
+        current_task = get_object_or_404(Task, id=task_id)
+        bidders = Bidder.objects.filter(task=current_task)
+        serializer = BidderDetailSerializer(bidders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
 class ApiTaskErrandSerializer(APIView):
     permission_classes = (IsAuthenticated,)
     '''
@@ -702,8 +715,19 @@ class ApiTaskAssignmentView(APIView):
         print(bidders)
         serializer = GetBidderSerializer(bidders, many=True)
         return Response({
-        "Bidders": serializer.data
+        "Bidders": serializer.data,
         }, status=status.HTTP_200_OK)
+    
+
+class ApiBidderDetailView(APIView):
+    '''Retrieves a bidder's details'''
+    def get(self, request, *args, **kwargs):
+        id = kwargs["id"]
+        current_task = get_object_or_404(Task, id=id)
+        bidders = current_task.task_bidders.all()
+        serializer = BidderDetailSerializer(bidders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     
 
 

@@ -64,13 +64,13 @@ class PostBidderSerializer(serializers.ModelSerializer):
 class BidderDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_bidder_username")
     phone_number = serializers.SerializerMethodField("get_bidder_phone_number")
-    user_details = CustomUserSerializer(many=False)
-    profile_details = ProfileSerializer(many=False)
+    user_details = CustomUserSerializer(many=False, read_only=True)
+    profile_details = ProfileSerializer(many=False, read_only=True)
 
 
     class Meta:
         model = Bidder
-        fields = ["price", "message", "user_details", "profile_details"]
+        fields = ["user", "price", "phone_number", "message", "user_details", "profile_details"]
 
 
     def get_bidder_username(self, obj):

@@ -33,6 +33,7 @@ from .views import (
     MarkTaskAsComplete,
     ApiMyCreatedTasks,
     ApiMyAcceptedTasks,
+    ApiTaskBidderDetailView
 
 )
 
@@ -63,6 +64,7 @@ urlpatterns = [
     path("<str:id>/reviews/", ApiTaskReview.as_view(), name="task-review"),
     path("<str:id>/bid/", ApiTaskBidView.as_view(), name="task-bid-create"),
     path("<str:id>/bidders/", ApiTaskAssignmentView.as_view(), name="task-bidders"),
+    path("<str:id>/bidders/details/",  ApiTaskBidderDetailView.as_view(), name="task-bidder-details"),
     path("<str:id>/contact-support/", ApiTaskSupport.as_view(), name="contact-support"),
     path("<str:id>/bidders/assign/<str:username>/", ApiPostTaskAssignmentView.as_view(), name="task-assign-bidder"),
     path("<uuid:task_id>/add-image/", AddImageToTaskView.as_view(), name="add-image-to-task"),

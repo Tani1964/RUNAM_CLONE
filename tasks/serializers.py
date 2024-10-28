@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from .models import Task, AcceptTask, TaskReview, Keyword, Bidder, NewBidder, Support, Shop, TaskImages
-from users.models import User
+from users.models import User, Profile
 from django.utils import timezone
 from users.serializers import CustomUserSerializer, MyUserSerializer, ProfileSerializer
+from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 class KeywordsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,15 +45,23 @@ class GetNewBidderSerializer(serializers.ModelSerializer):
 class GetBidderSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_bidder_username")
     phone_number = serializers.SerializerMethodField("get_bidder_phone_number")
+    bidder_detail_url = serializers.SerializerMethodField("get_task_bidder_details")
+
     class Meta:
         model = Bidder
-        fields = ["user", "message", "price", "phone_number"]
+        fields = ["user", "message", "price", "phone_number", "bidder_detail_url"]
 
     def get_bidder_username(self, obj):
         return obj.user.username
     
     def get_bidder_phone_number(self, obj):
         return obj.user.profile.phone_number
+    
+    def get_task_bidder_details(self, obj):
+        if settings.DEBUG:
+            return f"http://127.0.0.1:8000/tasks/{obj.task.id}/bidders/{obj.user.email}/details"
+        else:
+            return f"https://runit-78od.onrender.com/tasks/{obj.task.id}/bidders/{obj.user.email}/details"
     
 
 
@@ -65,12 +75,13 @@ class BidderDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_bidder_username")
     phone_number = serializers.SerializerMethodField("get_bidder_phone_number")
     user = CustomUserSerializer()
+    user_profile = serializers.SerializerMethodField("get_user_profile")
     # profile_details = ProfileSerializer()
 
 
     class Meta:
         model = Bidder
-        fields = ["user", "price", "phone_number", "message", "user"]
+        fields = ["user", "price", "phone_number", "message", "user", "user_profile"]
 
 
     def get_bidder_username(self, obj):
@@ -78,6 +89,14 @@ class BidderDetailSerializer(serializers.ModelSerializer):
     
     def get_bidder_phone_number(self, obj):
         return obj.user.profile.phone_number
+    
+
+    def get_user_profile(self, obj):
+        print(obj.user.email)
+        user = get_object_or_404(User, email=obj.user.email)
+        user_profile = get_object_or_404(Profile, user=user)
+        serializer = ProfileSerializer(user_profile)
+        return serializer.data
     
     
     
@@ -451,10 +470,3 @@ class TaskSupportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Support
         fields = ["category", "message", "date_created"]
-
-
-    
-
-
-    
-

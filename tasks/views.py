@@ -723,9 +723,9 @@ class ApiTaskBidderDetailView(APIView):
     '''Retrieves a bidder's details'''
     def get(self, request, *args, **kwargs):
         id = kwargs["id"]
-        email = kwargs.get("bidder_email")
+        username = kwargs.get("bidder_username")
         current_task = get_object_or_404(Task, id=id)
-        bidder = get_object_or_404(Bidder, task=current_task, user__email=email)
+        bidder = get_object_or_404(Bidder, task=current_task, user__username=username)
         serializer = BidderDetailSerializer(bidder)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
